@@ -1,0 +1,11 @@
+#!/usr/local/php/bin/php
+<?php
+set_time_limit(0);
+if(php_sapi_name() !== 'cli')exit('error,must be cli model!');
+const SYSM='/core';
+define('APP_PATH',__DIR__);
+define('CORE_PATH',dirname(APP_PATH).SYSM);
+define('IS_CLI',true);
+include CORE_PATH.'/lib/base/My.php';
+\core\My::createWebApp($argv)->run();
+?>
