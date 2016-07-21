@@ -2,6 +2,7 @@
 namespace core;
 class My{
     private static $_cofing=array();
+    private static $_includeClass=array();
     public static $app;
     const SUFFIX='.php';
     public static function createApp($className, $config){
@@ -13,22 +14,28 @@ class My{
         return self::$app;
     }
     public static function autoLoad($className){
-        
+        if(!empty(self::$_includeClass[$className]))return true;
         if(isset(self::$_core[$className])){
             include_once(CORE_PATH.self::$_core[$className]);
+            self::$_includeClass[$className]=true;
         }else{
             $clsArr=explode('\\',$className);
             if(count($clsArr)>1&&$clsArr[0]=='my'){
                 unset($clsArr[0]);
                 $className=implode('/',$clsArr);
-                if(file_exists(CORE_PATH.'/'.$className.self::SUFFIX))include_once(CORE_PATH.'/'.$className.self::SUFFIX);
+                if(file_exists(CORE_PATH.'/'.$className.self::SUFFIX)){
+                    include_once(CORE_PATH.'/'.$className.self::SUFFIX);
+                    self::$_includeClass[$className]=true;
+                }
             }
         }
         return true;
     }
     public static function autoLoadWebApp($className){
+        if(!empty(self::$_includeClass[$className]))return true;
         if(isset(self::$_coreWebApp[$className])){
             include_once(APP_PATH.self::$_coreWebApp[$className]);
+            self::$_includeClass[$className]=true;
         }else{
             $clsArr=explode('\\',$className);
             if(count($clsArr)>1&&$clsArr[0]=='app'){
@@ -36,16 +43,19 @@ class My{
                 $classNameA=implode('/',$clsArr);
                 if(file_exists(APP_PATH.'/'.$classNameA.self::SUFFIX)){
                     include_once(APP_PATH.'/'.$classNameA.self::SUFFIX);
+                    self::$_includeClass[$className]=true;
                     return true;
                 }
             }
             if(isset(self::$_selfCoreFile[$className])){//自定义核心文件
                 include_once(APP_PATH.'/'.trim(self::$_selfCoreFile[$className],'/'));
+                self::$_includeClass[$className]=true;
             }elseif(!empty(self::$_selfCoreDir)){//自定义核心文件夹
                 foreach (self::$_selfCoreDir as $va){
                     $va=trim($va,'/');
                     if(file_exists(APP_PATH.'/'.$va.'/'.$className.self::SUFFIX)){
                         include_once(APP_PATH.'/'.$va.'/'.$className.self::SUFFIX);
+                        self::$_includeClass[$className]=true;
                     }
                 }
             }
