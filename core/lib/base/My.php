@@ -33,13 +33,12 @@ class My{
             $clsArr=explode('\\',$className);
             if(count($clsArr)>1&&$clsArr[0]=='app'){
                 unset($clsArr[0]);
-                $className=implode('/',$clsArr);
-                if(file_exists(APP_PATH.'/'.$className.self::SUFFIX)){
-                    include_once(APP_PATH.'/'.$className.self::SUFFIX);
+                $classNameA=implode('/',$clsArr);
+                if(file_exists(APP_PATH.'/'.$classNameA.self::SUFFIX)){
+                    include_once(APP_PATH.'/'.$classNameA.self::SUFFIX);
                     return true;
                 }
             }
-            
             if(isset(self::$_selfCoreFile[$className])){//自定义核心文件
                 include_once(APP_PATH.'/'.trim(self::$_selfCoreFile[$className],'/'));
             }elseif(!empty(self::$_selfCoreDir)){//自定义核心文件夹
@@ -105,9 +104,11 @@ class My{
         return self::_loadClass('/model/',$class,$dir_path,'Model',true);
     }
     public static function helper($class,$dir_path='',$initial=true){
-        if(!self::_loadClass('/lib/helper/',$class,$dir_path,'',$initial)){
-            return self::_loadClass('/helper/',$class,$dir_path,'',$initial);
+        $r=self::_loadClass('/lib/helper/',$class,$dir_path,'',$initial);
+        if(!$r){
+            $r=self::_loadClass('/helper/',$class,$dir_path,'',$initial);
         }
+        return $r;
     }
 //     public static function controller($class,$dir_path='',$initial=true){
 //         return self::_loadClass('/controller/',$class,$dir_path,'Controller',$initial);

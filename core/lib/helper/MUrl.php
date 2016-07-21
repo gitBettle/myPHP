@@ -211,7 +211,14 @@ class MUrl{
             
         }else{
             self::$currentRoute=[0,$myGet];
-           
+            $ctrlName=MReq::get(self::UrlCtrlName);
+            if(!empty($ctrlName)){
+                $ctrlArr=explode('-',$ctrlName,2);
+                if(count($ctrlArr)>1){
+                    MReq::set(self::UrlModuleName,$ctrlArr[0]);
+                    MReq::set(self::UrlCtrlName,$ctrlArr[1]);
+                }
+            }
         }//end $_SERVER['PATH_INFO']
     }
     /**

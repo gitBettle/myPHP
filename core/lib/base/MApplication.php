@@ -19,7 +19,7 @@ class MApplication extends MApplicationBase{
         $uController=ucfirst($controller);
         $module=helper\MUrl::getInfo('module');
         //\core\My::Controller($uController,$module,false);
-        $module=!empty($module)?'\\'.str_replace('/','\\',helper\MFilter::safeCls($module)):'';
+        $module=!empty($module)?'\\'.str_replace('_','\\',helper\MFilter::safeCls($module)):'';
         $controllerClassName='\\app\\controller'.$module.'\\'.$uController.'Controller';
         $myControllerClassName=str_replace('\\app\\', '\\my\\', $controllerClassName);
         if(class_exists($controllerClassName))$controllerClass = new $controllerClassName($this,$controller);
