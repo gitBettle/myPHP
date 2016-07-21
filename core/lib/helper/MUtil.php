@@ -20,10 +20,11 @@ class MUtil{
     
     }
     public static function init_redis($host='192.168.1.4',$port='6379'){
-        if(self::$redis==null){
-            self::$redis = new \Redis();
-            self::$redis->connect($host,$port);
+        static $redis;
+        if($redis==null){
+            $redis = new \Redis();
+            $redis->connect($host,$port);
         }
-        return self::$redis;
+        return $redis;
     }
 }//end func class
